@@ -1,5 +1,7 @@
 package com.nabil.mysearch
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nabil.mysearch.network.model.SearchItem
 import kotlinx.android.synthetic.main.item_layout_search.view.*
 import java.util.*
+
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
@@ -30,10 +33,15 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     }
 
     class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: SearchItem) = with(itemView) {
-            tvTitle.text = item.title
+        fun bind(searchItem: SearchItem) = with(itemView) {
+            tvTitle.text = searchItem.title
             setOnClickListener {
-                // TODO: Handle on click
+
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+
+                    data = Uri.parse(searchItem.link)
+                }
+                itemView.context.startActivity(intent)
             }
         }
     }
