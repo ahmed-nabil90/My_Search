@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var adapter: SearchAdapter
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,12 +20,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setViewModel()
         setListeners()
+        setAdapter()
 
+    }
+
+    private fun setAdapter() {
+        adapter = SearchAdapter()
+        rvSearch.adapter = adapter
     }
 
     private fun setListeners() {
         etSearch.setOnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_SEARCH) {
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 mainViewModel.searchQuery((v as EditText).text.toString())
                 true
             }
@@ -41,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                 Observer { t -> Toast.makeText(this@MainActivity, t, Toast.LENGTH_SHORT).show() })
 
             searchItemsLiveData.observe(this@MainActivity, Observer { searchList ->
-
+                adapter.swapData(searchList)
             })
         }
     }
